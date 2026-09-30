@@ -1,0 +1,224 @@
+{
+  "entries": [
+    {
+      "strategy_id": "ace_001",
+      "condition": "Simple fixes with clear locations mentioned in issue description, Issues where solution pattern exists elsewhere in codebase, Bugs with obvious root causes visible in tracebacks, High risk of analysis paralysis on straightforward changes",
+      "strategy": "Implement hard exploration budget (12-15 steps) that blocks further read-only commands and requires file edit. Reserve remaining steps for test-driven iteration",
+      "evidence": {
+        "helpful": 38,
+        "harmful": 2
+      },
+      "confidence": 0.94,
+      "harness_diff_template": "",
+      "strategy_type": "SCAFFOLD_MODIFICATION",
+      "anti_overspecification_note": ""
+    },
+    {
+      "strategy_id": "ace_003",
+      "condition": "Issue description contains exact fix location or suggested solution, Clear error messages pointing to specific code locations, Established fix patterns visible in codebase, Low-risk changes with deterministic validation",
+      "strategy": "For issues with clear fix descriptions or explicit line numbers in bug reports: make targeted edit within 10-15 steps based on issue description alone, then use test feedback to guide refinement",
+      "evidence": {
+        "helpful": 25,
+        "harmful": 0
+      },
+      "confidence": 0.96,
+      "harness_diff_template": "",
+      "strategy_type": "SCAFFOLD_MODIFICATION",
+      "anti_overspecification_note": ""
+    },
+    {
+      "strategy_id": "ace_004",
+      "condition": "Deep technical bugs requiring understanding of framework internals, Issues involving complex state management or inheritance hierarchies, Bugs requiring understanding of historical context or design decisions, Multi-component coordination requiring architectural knowledge",
+      "strategy": "Allow 15-20 exploration steps for complex issues requiring deep understanding before forcing edits. Recognize when issues need architectural comprehension vs simple fixes",
+      "evidence": {
+        "helpful": 18,
+        "harmful": 5
+      },
+      "confidence": 0.87,
+      "harness_diff_template": "",
+      "strategy_type": "SCAFFOLD_MODIFICATION",
+      "anti_overspecification_note": ""
+    },
+    {
+      "strategy_id": "ace_005",
+      "condition": "Issue provides minimal reproduction case in description, Full test suite has timeout or performance issues, Fix is verifiable through direct execution, Reproduction case is self-contained and deterministic",
+      "strategy": "For issues with simple reproduction cases: validate fix with reproduction script before running full test suite. Avoid timeout-prone comprehensive testing when targeted validation suffices",
+      "evidence": {
+        "helpful": 15,
+        "harmful": 1
+      },
+      "confidence": 0.92,
+      "harness_diff_template": "",
+      "strategy_type": "TEXT_INJECTION",
+      "anti_overspecification_note": ""
+    },
+    {
+      "strategy_id": "ace_006",
+      "condition": "Changes required across 3+ files, Coordinated updates to source, tests, and documentation, Pattern-based changes (same fix in multiple locations), Risk of incomplete implementation if not systematic",
+      "strategy": "For multi-file coordinated changes: implement core fix first, validate with targeted tests, then systematically update related files. Avoid attempting all changes simultaneously",
+      "evidence": {
+        "helpful": 12,
+        "harmful": 8
+      },
+      "confidence": 0.78,
+      "harness_diff_template": "",
+      "strategy_type": "TEXT_INJECTION",
+      "anti_overspecification_note": ""
+    },
+    {
+      "strategy_id": "ace_007",
+      "condition": "Agent correctly identifies bug location and fix approach, Continued exploration provides diminishing returns, Solution is implementable with current understanding, Analysis paralysis pattern detected (repeated similar explorations)",
+      "strategy": "Detect when agent has identified root cause and solution but continues exploring. Force transition to implementation with explicit prompts after diagnosis is complete",
+      "evidence": {
+        "helpful": 22,
+        "harmful": 0
+      },
+      "confidence": 0.94,
+      "harness_diff_template": "",
+      "strategy_type": "TEXT_INJECTION",
+      "anti_overspecification_note": ""
+    },
+    {
+      "strategy_id": "ace_008",
+      "condition": "Issues involving non-ASCII characters, File editing with special characters (backticks, quotes, Unicode), Bash command quoting complexity, Test files with Unicode content",
+      "strategy": "For Unicode/encoding issues or bash quoting problems: use Python scripts or heredoc syntax instead of inline bash commands with special characters",
+      "evidence": {
+        "helpful": 8,
+        "harmful": 0
+      },
+      "confidence": 0.91,
+      "harness_diff_template": "",
+      "strategy_type": "TEXT_INJECTION",
+      "anti_overspecification_note": ""
+    },
+    {
+      "strategy_id": "ace_009",
+      "condition": "Existing tests don't cover the bug scenario, Fix requires validation of new behavior, Risk of test-induced over-engineering, Test additions should align with original issue scope",
+      "strategy": "For issues requiring new test cases: after core fix passes existing tests, add minimal regression tests. Avoid over-engineering test infrastructure or testing unrelated edge cases",
+      "evidence": {
+        "helpful": 10,
+        "harmful": 2
+      },
+      "confidence": 0.88,
+      "harness_diff_template": "",
+      "strategy_type": "TEXT_INJECTION",
+      "anti_overspecification_note": ""
+    },
+    {
+      "strategy_id": "ace_010",
+      "condition": "Existing tests assert buggy behavior, Test failures after correct fix indicate wrong expectations, Tests were written to match implementation rather than specification, Need to update both code and test assertions",
+      "strategy": "Recognize when test expectations are incorrect and need updating alongside code fixes. Validate that test assertions match intended behavior, not buggy behavior",
+      "evidence": {
+        "helpful": 7,
+        "harmful": 0
+      },
+      "confidence": 0.93,
+      "harness_diff_template": "",
+      "strategy_type": "TEXT_INJECTION",
+      "anti_overspecification_note": ""
+    },
+    {
+      "strategy_id": "ace_011",
+      "condition": "Bug requires specific OS/platform (Windows, Mac, specific backend), Test environment cannot reproduce the issue, Bug is verifiable through code inspection and logic, Historical commits document the behavior",
+      "strategy": "For platform-specific or environment-dependent bugs: focus on logical code analysis and commit history rather than empirical testing when reproduction environment is unavailable",
+      "evidence": {
+        "helpful": 5,
+        "harmful": 1
+      },
+      "confidence": 0.86,
+      "harness_diff_template": "",
+      "strategy_type": "TEXT_INJECTION",
+      "anti_overspecification_note": ""
+    },
+    {
+      "strategy_id": "ace_012",
+      "condition": "Issue explicitly references a commit that introduced the bug, Regression from known working state, Fix likely involves restoring or adapting previous logic, Git history provides clear before/after context",
+      "strategy": "For regression issues with cited commits: immediately examine the problematic commit's diff, form hypothesis about missing case, implement fix mirroring existing patterns",
+      "evidence": {
+        "helpful": 6,
+        "harmful": 0
+      },
+      "confidence": 0.92,
+      "harness_diff_template": "",
+      "strategy_type": "TEXT_INJECTION",
+      "anti_overspecification_note": ""
+    },
+    {
+      "strategy_id": "ace_013",
+      "condition": "Full test suite has timeout issues, Specific test files validate the fix, Fast feedback loops needed for iteration, Test infrastructure is slow or resource-intensive",
+      "strategy": "Use targeted test commands on specific test files rather than full test suites to avoid timeouts. Run comprehensive tests only after targeted validation succeeds",
+      "evidence": {
+        "helpful": 9,
+        "harmful": 0
+      },
+      "confidence": 0.94,
+      "harness_diff_template": "",
+      "strategy_type": "TEXT_INJECTION",
+      "anti_overspecification_note": ""
+    },
+    {
+      "strategy_id": "ace_014",
+      "condition": "Requires understanding Python AST, metaclasses, or descriptors, Type system interactions or protocol compliance, Language-level semantics (slots, MRO, etc.), Complex parsing or code generation logic",
+      "strategy": "For issues involving complex type systems, AST manipulation, or language-level semantics: allow extended exploration (15-20 steps) to understand constraints before forcing implementation",
+      "evidence": {
+        "helpful": 8,
+        "harmful": 3
+      },
+      "confidence": 0.84,
+      "harness_diff_template": "",
+      "strategy_type": "SCAFFOLD_MODIFICATION",
+      "anti_overspecification_note": ""
+    },
+    {
+      "strategy_id": "ace_015",
+      "condition": "Core fix implemented and validated, Existing tests pass, Reproduction case works correctly, Agent shows signs of scope creep or over-engineering",
+      "strategy": "After successful fix validation with passing tests, submit immediately. Avoid continued exploration of tangential code or over-optimization when core requirements are met",
+      "evidence": {
+        "helpful": 11,
+        "harmful": 0
+      },
+      "confidence": 0.95,
+      "harness_diff_template": "",
+      "strategy_type": "TEXT_INJECTION",
+      "anti_overspecification_note": ""
+    },
+    {
+      "strategy_id": "ace_016",
+      "condition": "Mathematical correctness bugs, Algorithmic logic errors, Symbolic computation issues, Complex formula implementations",
+      "strategy": "For issues with mathematical/algorithmic bugs: create minimal reproduction test first, implement simplest fix, then iterate based on test failures rather than trying to anticipate all edge cases",
+      "evidence": {
+        "helpful": 12,
+        "harmful": 1
+      },
+      "confidence": 0.93,
+      "harness_diff_template": "",
+      "strategy_type": "TEXT_INJECTION",
+      "anti_overspecification_note": ""
+    }
+  ],
+  "general_notes": [
+    "Soft nudges outperform hard gates (reflection prompts +2pp, submission gates -8pp).",
+    "Do not modify has_finished() \u2014 over-specification drops pass rate.",
+    "Strategies are grounded in contrastive trajectory analysis: same issue, different harness, different agent behavior."
+  ],
+  "anti_patterns": [
+    "Attempting to modify has_finished() logic, add hard gates, or hardcode test commands - these are harness implementation details that should not be in playbook strategies",
+    "Requiring test discovery before allowing ANY exploration - some issues need code analysis first to understand what to test",
+    "Forcing edits at arbitrary step counts without considering issue complexity - simple bugs need less exploration than architectural issues",
+    "Allowing unlimited exploration without any forcing functions - leads to analysis paralysis on complex issues",
+    "Attempting all multi-file changes simultaneously without incremental validation",
+    "Writing comprehensive new test infrastructure when simple reproduction scripts suffice",
+    "Running full test suites when targeted test files provide faster feedback",
+    "Continuing exploration after root cause is identified and solution is clear",
+    "Over-analyzing edge cases before implementing obvious fixes",
+    "Modifying test infrastructure or adding complex test setups when existing tests work fine"
+  ],
+  "metadata": {
+    "source": "ace_output/verified_gemini37/reflections.jsonl",
+    "total_reflections": 251,
+    "valid_reflections": 245,
+    "clusters": 17,
+    "min_evidence": 1,
+    "curator_model": "vertex_ai/claude-sonnet-4-5@20250929"
+  }
+}

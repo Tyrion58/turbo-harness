@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+message: "If you use this code or method, please cite:"
+title: "Turbo Harness: Instance-Adaptive Harness Optimization"
+authors:
+  - family-names: Zhang
+    given-names: Tunyu
+  - family-names: Wang
+    given-names: Hao
+  - family-names: Xu
+    given-names: Kai
+  - family-names: Metaxas
+    given-names: "Dimitris N."
+year: 2026
+url: "https://arxiv.org/abs/2609.40330"
+repository-code: "https://github.com/Tyrion58/turbo-harness"
+license: MIT
+identifiers:
+  - type: other
+    value: "arXiv:2609.40330"
+    description: "arXiv preprint"

@@ -1,0 +1,53 @@
+[project]
+name = "turbo-harness"
+version = "0.1.0"
+description = "Turbo Harness: Instance-Adaptive Harness Optimization"
+readme = "README.md"
+requires-python = ">=3.12"
+license = { text = "MIT" }
+# Dev/eval venv deps (shared core + coding benchmarks). Training uses the vendored
+# SkyRL in its own venv (see docs/DEPENDENCIES.md); TB2.1 uses the `tb2` extra.
+dependencies = [
+    "anthropic[vertex]>=0.52.0",
+    "datasets>=3.6.0",
+    "docker>=7.1.0",
+    "flask>=3.0.0",
+    "google-cloud-aiplatform>=1.38",
+    "litellm>=1.74.0",
+    "numpy>=1.26",
+    "pyyaml>=6.0",
+    "requests>=2.32.0",
+    "scipy>=1.16.2",
+    "tenacity>=8.5.0",
+    "tqdm>=4.67.1",
+    "wandb>=0.22.0",
+    # coding-benchmark scoring (SWE-smith / SWE-bench Verified):
+    # NOTE: mini-swe-agent is VENDORED at turbo_harness/infra/mini-swe-agent/ and installed
+    # editable (`pip install -e turbo_harness/infra/mini-swe-agent`); see docs/DEPENDENCIES.md.
+    "swesmith>=0.0.9",
+    "swebench==4.1.0",  # pin: swesmith 0.0.9 imports constants removed in swebench 5.x
+]
+
+[project.optional-dependencies]
+# Terminal-Bench-2.1 runtime (harbor engine). See docs/DEPENDENCIES.md.
+tb2 = [
+    "harbor==0.18.0",
+    "terminal-bench",
+]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.12.7",
+]
+
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["turbo_harness*"]
+
+[tool.ruff]
+exclude = [
+    "SkyRL",
+]

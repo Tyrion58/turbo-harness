@@ -1,0 +1,106 @@
+{
+  "entries": [
+    {
+      "strategy_id": "tb2_ace_000",
+      "condition": "task=file-edit, task=build/compile, task=algorithm-implementation, task=code-with-tests",
+      "strategy": "For code-implementation tasks validated by test suites (algorithm implementation, model fitting, cryptanalysis, scheduling, circuit design), integrate automatic test discovery and execution into the completion gate: before accepting task_complete, scan for test files (test_*, *_test.*, check.sh), run them, and feed failure output back to the agent for iterative correction. Use head+tail truncation on test output to preserve both summary counts and specific error messages.",
+      "evidence": {
+        "helpful": 6,
+        "harmful": 0
+      },
+      "confidence": 0.55,
+      "harness_diff_template": "",
+      "strategy_type": "SCAFFOLD_MODIFICATION",
+      "anti_overspecification_note": ""
+    },
+    {
+      "strategy_id": "tb2_ace_001",
+      "condition": "task=ML-train, task=build/compile, task=long-running-compute",
+      "strategy": "For long-running computation tasks (ML inference, model downloads, dataset processing, CompCert compilation, Stan sampling), do NOT use aggressive stall-detection nudges. If stall-breaking is used at all, set the threshold to 8-10+ consecutive empty turns rather than 3. Simple asyncio.sleep-based polling may seem appealing but has regressed overall pass-rate when applied globally; only consider it for tasks where you have strong evidence that marker-based polling is causing specific failures.",
+      "evidence": {
+        "helpful": 8,
+        "harmful": 0
+      },
+      "confidence": 0.58,
+      "harness_diff_template": "",
+      "strategy_type": "SCAFFOLD_MODIFICATION",
+      "anti_overspecification_note": ""
+    },
+    {
+      "strategy_id": "tb2_ace_002",
+      "condition": "task=server, task=file-edit, task=build/compile, task=multi-step-config",
+      "strategy": "For multi-step implementation and configuration tasks (gRPC services, web server setup, financial processors, code translation) where the agent stalls, re-inject the original task description alongside a fresh terminal state snapshot (pwd, ls, recent output) rather than sending a generic nudge. This re-grounds the model on what remains undone and prevents it from repeating the same failing approach.",
+      "evidence": {
+        "helpful": 6,
+        "harmful": 0
+      },
+      "confidence": 0.48,
+      "harness_diff_template": "",
+      "strategy_type": "SCAFFOLD_MODIFICATION",
+      "anti_overspecification_note": ""
+    },
+    {
+      "strategy_id": "tb2_ace_003",
+      "condition": "task=archive, task=file-edit, task=data-processing",
+      "strategy": "For tasks requiring a steady stream of sequential shell commands (data resharding, file extraction, archive manipulation, ETL pipelines) where the model enters degenerate text-only loops, consider adaptive tool_choice escalation: default to 'auto' but switch to 'required' only after 2+ consecutive turns with no tool call. Do NOT force tool_choice='required' globally \u2014 this has regressed overall pass-rate.",
+      "evidence": {
+        "helpful": 3,
+        "harmful": 0
+      },
+      "confidence": 0.45,
+      "harness_diff_template": "",
+      "strategy_type": "SCAFFOLD_MODIFICATION",
+      "anti_overspecification_note": ""
+    },
+    {
+      "strategy_id": "tb2_ace_004",
+      "condition": "task=DB, task=file-edit, task=git-operations, task=interactive-CLI",
+      "strategy": "For short interactive commands (openssl, git operations, database queries) that produce variable or empty output, avoid stall-breaking nudges that fire on low thresholds (3 turns). Some commands (git reset, sqlite truncate, openssl with -subj) produce no stdout, which stall detectors misinterpret. Use simple sleep-based waits for these short commands and let the model proceed naturally.",
+      "evidence": {
+        "helpful": 6,
+        "harmful": 0
+      },
+      "confidence": 0.45,
+      "harness_diff_template": "",
+      "strategy_type": "SCAFFOLD_MODIFICATION",
+      "anti_overspecification_note": ""
+    },
+    {
+      "strategy_id": "tb2_ace_005",
+      "condition": "task=file-edit, task=algorithm-implementation, task=reasoning-heavy",
+      "strategy": "For reasoning-intensive tasks (code-from-image, constraint solving, async task management, leaderboard queries) do not cap max_tokens aggressively. However, do NOT blindly increase max_tokens or output limits globally \u2014 expanded limits have regressed overall pass-rate. Only relax limits when there is specific evidence the model is hitting OutputLengthExceeded on a particular task.",
+      "evidence": {
+        "helpful": 5,
+        "harmful": 0
+      },
+      "confidence": 0.4,
+      "harness_diff_template": "",
+      "strategy_type": "SCAFFOLD_MODIFICATION",
+      "anti_overspecification_note": ""
+    }
+  ],
+  "general_notes": [
+    "Strategies are grounded in contrastive analysis of the meta-harness evolution: for a given terminal task, one harness variant passed and another failed.",
+    "Adapt the agent loop's poll-wait timing, stall/loop handling, completion-gate strictness, truncation, and task-kind guidance \u2014 NOT prompt wording, NOT the model.",
+    "The base (winner) harness already solves most tasks. Do NOT rewrite the completion gate, stall detector, or core loop unless THIS task's failure mode specifically calls for it; when in doubt on a task the base already handles, prefer NO_PATCH_NEEDED."
+  ],
+  "anti_patterns": [
+    "NEVER apply the 'kira_proven_combo' bundle (max_tokens=65536 + 3-turn stall nudge + poll-wait optimization + OutputLengthExceeded handling) as a package \u2014 this regressed pass-rate by -46.7%. The combination of individually-reasonable changes creates compounding negative interactions.",
+    "NEVER replace marker-based polling with asyncio.sleep-based polling globally \u2014 'kira_poll_sleep' regressed by -11.1%. Marker-based polling works well for most tasks; only consider sleep-based polling for specific long-running commands where markers demonstrably fail.",
+    "NEVER add a stall-breaking nudge with a low threshold (3 consecutive empty turns) globally \u2014 'kira_stall_breaker' regressed by -8.9%. Many tasks have legitimate pauses (compilation, model loading, reasoning between steps) that look like stalls but are not. If used at all, set thresholds much higher (8-10+) and only for specific task types.",
+    "NEVER force tool_choice='required' globally \u2014 'kira_tool_required' regressed by -6.7%. While it eliminates text-only loops on some tasks, it prevents the model from reasoning/planning between tool calls, which many tasks require. Use adaptive escalation (auto \u2192 required after N no-tool turns) only when stalling is detected.",
+    "NEVER add test-discovery-and-execution to the completion gate globally \u2014 'kira_test_discovery' regressed by -8.9%. While it helps tasks with clear test suites, it can cause false negatives, wasted turns, or interference on tasks without standard test structures. Apply only when test files are confidently identified.",
+    "NEVER increase max_tokens or output length limits globally \u2014 'kira_expanded_limits' regressed by -6.7%. Larger token budgets can cause the model to over-think rather than act, and larger output buffers can overwhelm context windows. Only relax limits for specific tasks showing truncation evidence.",
+    "DO NOT rewrite the completion gate, stall detection logic, or core agent loop unless the specific task demonstrably fails due to that component. The biggest risk is OVER-PATCHING a harness that already works for most tasks. Each individual 'improvement' above seemed reasonable in isolation but regressed overall pass-rate, proving that the default scaffold is well-tuned and changes should be minimal and targeted.",
+    "DO NOT stack multiple scaffold changes simultaneously. Every known regression involved applying a change that seemed beneficial in isolation. Compounding multiple changes (as in kira_proven_combo at -46.7%) dramatically amplifies risk. Apply at most ONE targeted adaptation per task.",
+    "DO NOT apply a scaffold change based on a single task's failure analysis without considering whether it will harm the ~90% of tasks that already pass. The base harness is the safe default; adaptations should be reserved for tasks with clear, specific failure signatures matching a known pattern."
+  ],
+  "metadata": {
+    "domain": "terminal_bench_2",
+    "method": "ace-trajectory-grounded",
+    "source_run": "harness_opt/terminal_bench/logs/sonnet45_tb21_evo_n12_20260917_175608",
+    "n_experiences": 30,
+    "n_reflections_valid": 30,
+    "curator_model": "vertex_ai/claude-opus-4-6"
+  }
+}

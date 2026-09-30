@@ -1,0 +1,26 @@
+# Our fixed copy of the upstream meta-harness tmux override.
+# FIX (2026-09-09): the upstream override bind-mounts the HOST tmux binary and always
+# runs it, which fails in task images with older glibc (e.g. Debian bullseye / glibc 2.31:
+# "GLIBC_2.34 not found") -> "Failed to start tmux session". The wrapper below prefers the
+# container's OWN tmux (built for its own glibc) and falls back to the host binary only for
+# images that lack tmux. See [[tb2-setup-and-status]].
+services:
+  main:
+    network_mode: host
+    volumes:
+      - type: bind
+        source: /usr/bin/tmux
+        target: /usr/local/bin/tmux.real
+        read_only: true
+      - type: bind
+        source: /lib64/libtinfo.so.6
+        target: /usr/local/lib/libtinfo.so.6
+        read_only: true
+      - type: bind
+        source: /lib64/libevent_core-2.1.so.7
+        target: /usr/local/lib/libevent_core-2.1.so.7
+        read_only: true
+    command:
+      - "sh"
+      - "-c"
+      - "printf '#!/bin/sh\\nif /usr/bin/tmux -V >/dev/null 2>&1; then exec /usr/bin/tmux \"$$@\"; else exec env LD_LIBRARY_PATH=/usr/local/lib /usr/local/bin/tmux.real \"$$@\"; fi\\n' > /usr/local/bin/tmux && chmod +x /usr/local/bin/tmux && exec sleep infinity"

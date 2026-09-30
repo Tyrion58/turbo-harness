@@ -1,0 +1,202 @@
+[
+  {
+    "repo": "swesmith/encode__starlette.db5063c2",
+    "short_name": "encode__starlette",
+    "language": "python",
+    "available": 692,
+    "train": 2,
+    "test": 2
+  },
+  {
+    "repo": "swesmith/tornadoweb__tornado.d5ac65c1",
+    "short_name": "tornadoweb__tornado",
+    "language": "python",
+    "available": 309,
+    "train": 2,
+    "test": 2
+  },
+  {
+    "repo": "swesmith/bottlepy__bottle.a8dfef30",
+    "short_name": "bottlepy__bottle",
+    "language": "python",
+    "available": 366,
+    "train": 2,
+    "test": 2
+  },
+  {
+    "repo": "swesmith/benoitc__gunicorn.bacbf8aa",
+    "short_name": "benoitc__gunicorn",
+    "language": "python",
+    "available": 366,
+    "train": 2,
+    "test": 2
+  },
+  {
+    "repo": "swesmith/pallets__jinja.ada0a9a6",
+    "short_name": "pallets__jinja",
+    "language": "python",
+    "available": 805,
+    "train": 2,
+    "test": 2
+  },
+  {
+    "repo": "swesmith/pandas-dev__pandas.95280573",
+    "short_name": "pandas-dev__pandas",
+    "language": "python",
+    "available": 1784,
+    "train": 2,
+    "test": 2
+  },
+  {
+    "repo": "swesmith/dask__dask.5f61e423",
+    "short_name": "dask__dask",
+    "language": "python",
+    "available": 208,
+    "train": 2,
+    "test": 2
+  },
+  {
+    "repo": "swesmith/stanfordnlp__dspy.651a4c71",
+    "short_name": "stanfordnlp__dspy",
+    "language": "python",
+    "available": 661,
+    "train": 2,
+    "test": 2
+  },
+  {
+    "repo": "swesmith/pallets__click.fde47b4b",
+    "short_name": "pallets__click",
+    "language": "python",
+    "available": 496,
+    "train": 2,
+    "test": 2
+  },
+  {
+    "repo": "swesmith/python-jsonschema__jsonschema.93e0caa5",
+    "short_name": "python-jsonschema__jsonschema",
+    "language": "python",
+    "available": 284,
+    "train": 2,
+    "test": 2
+  },
+  {
+    "repo": "swesmith/pydantic__pydantic.acb0f10f",
+    "short_name": "pydantic__pydantic",
+    "language": "python",
+    "available": 638,
+    "train": 2,
+    "test": 2
+  },
+  {
+    "repo": "swesmith/marshmallow-code__marshmallow.9716fc62",
+    "short_name": "marshmallow-code__marshmallow",
+    "language": "python",
+    "available": 335,
+    "train": 2,
+    "test": 2
+  },
+  {
+    "repo": "swesmith/oauthlib__oauthlib.1fd52536",
+    "short_name": "oauthlib__oauthlib",
+    "language": "python",
+    "available": 689,
+    "train": 2,
+    "test": 2
+  },
+  {
+    "repo": "swesmith/paramiko__paramiko.23f92003",
+    "short_name": "paramiko__paramiko",
+    "language": "python",
+    "available": 731,
+    "train": 2,
+    "test": 2
+  },
+  {
+    "repo": "swesmith/pygments__pygments.27649ebb",
+    "short_name": "pygments__pygments",
+    "language": "python",
+    "available": 1177,
+    "train": 2,
+    "test": 2
+  },
+  {
+    "repo": "swesmith/sqlfluff__sqlfluff.50a1c4b6",
+    "short_name": "sqlfluff__sqlfluff",
+    "language": "python",
+    "available": 1267,
+    "train": 2,
+    "test": 2
+  },
+  {
+    "repo": "swesmith/chardet__chardet.9630f238",
+    "short_name": "chardet__chardet",
+    "language": "python",
+    "available": 38,
+    "train": 2,
+    "test": 2
+  },
+  {
+    "repo": "swesmith/joke2k__faker.8b401a7d",
+    "short_name": "joke2k__faker",
+    "language": "python",
+    "available": 179,
+    "train": 2,
+    "test": 2
+  },
+  {
+    "repo": "swesmith/scrapy__scrapy.35212ec5",
+    "short_name": "scrapy__scrapy",
+    "language": "python",
+    "available": 197,
+    "train": 2,
+    "test": 2
+  },
+  {
+    "repo": "swesmith/cookiecutter__cookiecutter.b4451231",
+    "short_name": "cookiecutter__cookiecutter",
+    "language": "python",
+    "available": 67,
+    "train": 2,
+    "test": 2
+  },
+  {
+    "repo": "swesmith/arrow-py__arrow.1d70d009",
+    "short_name": "arrow-py__arrow",
+    "language": "python",
+    "available": 294,
+    "train": 2,
+    "test": 2
+  },
+  {
+    "repo": "swesmith/facebookresearch__hydra.0f03eb60",
+    "short_name": "facebookresearch__hydra",
+    "language": "python",
+    "available": 365,
+    "train": 2,
+    "test": 2
+  },
+  {
+    "repo": "swesmith/getmoto__moto.694ce1f4",
+    "short_name": "getmoto__moto",
+    "language": "python",
+    "available": 529,
+    "train": 2,
+    "test": 2
+  },
+  {
+    "repo": "swesmith/prettytable__prettytable.ca90b055",
+    "short_name": "prettytable__prettytable",
+    "language": "python",
+    "available": 78,
+    "train": 2,
+    "test": 2
+  },
+  {
+    "repo": "swesmith/adrienverge__yamllint.8513d9b9",
+    "short_name": "adrienverge__yamllint",
+    "language": "python",
+    "available": 130,
+    "train": 2,
+    "test": 2
+  }
+]

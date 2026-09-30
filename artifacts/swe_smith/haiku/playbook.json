@@ -1,0 +1,174 @@
+{
+  "entries": [
+    {
+      "strategy_id": "ace_000",
+      "condition": "Bug location specified in issue description, Single-file or single-method fix required, Clear error messages pointing to exact location, No complex dependencies or architectural understanding needed",
+      "strategy": "For simple, localized bugs with clear symptoms and obvious fix locations: allow immediate editing after reading 1-2 core files. Do not enforce rigid exploration quotas (4+ files) when the bug location is explicitly stated in the issue description or immediately visible from error messages.",
+      "evidence": {
+        "helpful": 8,
+        "harmful": 0
+      },
+      "confidence": 0.94,
+      "harness_diff_template": "",
+      "strategy_type": "TEXT_INJECTION",
+      "anti_overspecification_note": ""
+    },
+    {
+      "strategy_id": "ace_001",
+      "condition": "Fix verified with reproduction case, Simple, deterministic bug fix, Clear pass/fail verification signal, Agent showing signs of over-verification",
+      "strategy": "After successful verification of a fix with the exact reproduction case from the issue: immediately submit without running comprehensive test suites, edge case exploration, or additional validation. Add explicit 'submit NOW' reminders when: (1) code change made, (2) reproduction test passes, (3) agent starts additional testing.",
+      "evidence": {
+        "helpful": 10,
+        "harmful": 0
+      },
+      "confidence": 0.94,
+      "harness_diff_template": "",
+      "strategy_type": "TEXT_INJECTION",
+      "anti_overspecification_note": ""
+    },
+    {
+      "strategy_id": "ace_002",
+      "condition": "Issue mentions recent breaking changes, Bug introduced by refactoring/simplification, Git history available, Working version exists in version control",
+      "strategy": "For regression bugs or issues mentioning recent commits: prioritize git history analysis (git log, git diff, git show) within first 5-7 steps. Check git status before deep exploration to detect pre-existing fixes. If a suspicious recent commit is found, immediately compare with working version and apply targeted revert.",
+      "evidence": {
+        "helpful": 3,
+        "harmful": 0
+      },
+      "confidence": 0.9,
+      "harness_diff_template": "",
+      "strategy_type": "SCAFFOLD_MODIFICATION",
+      "anti_overspecification_note": ""
+    },
+    {
+      "strategy_id": "ace_003",
+      "condition": "Issue involves git, shell commands, or external processes, Fix modifies command construction or invocation, Verification requires process execution, not just code correctness",
+      "strategy": "For issues involving external commands or VCS operations: require at least one real execution test demonstrating the actual command works correctly. Mock tests alone are insufficient - verify the external process is invoked properly with actual command output before and after the fix.",
+      "evidence": {
+        "helpful": 1,
+        "harmful": 0
+      },
+      "confidence": 0.92,
+      "harness_diff_template": "",
+      "strategy_type": "SCAFFOLD_MODIFICATION",
+      "anti_overspecification_note": ""
+    },
+    {
+      "strategy_id": "ace_004",
+      "condition": "Issue involves command-line interface, Tool has console_scripts entry points, Reproduction example shows shell command usage",
+      "strategy": "For CLI tool issues: always run the EXACT reproduction command from the issue description as a shell command, not just Python API calls. Test both the Python API and actual CLI invocation paths. Verify through the same interface users would use (bash command line), checking for entry points or __main__.py that might have separate code paths.",
+      "evidence": {
+        "helpful": 1,
+        "harmful": 0
+      },
+      "confidence": 0.85,
+      "harness_diff_template": "",
+      "strategy_type": "SCAFFOLD_MODIFICATION",
+      "anti_overspecification_note": ""
+    },
+    {
+      "strategy_id": "ace_005",
+      "condition": "Multiple bugs in same method or file, Second bug only revealed after fixing first, Iterative testing required to discover all issues",
+      "strategy": "For issues with multiple interrelated bugs in the same method: allow early edits after minimal exploration, then rely on test-driven iteration to discover additional bugs. After fixing the first bug, immediately re-run tests to expose subsequent issues rather than attempting comprehensive analysis upfront.",
+      "evidence": {
+        "helpful": 2,
+        "harmful": 0
+      },
+      "confidence": 0.93,
+      "harness_diff_template": "",
+      "strategy_type": "TEXT_INJECTION",
+      "anti_overspecification_note": ""
+    },
+    {
+      "strategy_id": "ace_007",
+      "condition": "Issue description contradicts test results, Ambiguous whether description shows current or desired state, Recent commits mentioned in issue, Testing shows unexpected correct behavior",
+      "strategy": "For issues with contradictory evidence between description and testing: check git history FIRST to understand what changes were already made. Determine if the issue describes current broken state or desired state. If testing shows correct behavior but issue claims it's broken, verify the test matches the exact scenario. Consider that 'Bug Patch' commits may indicate fix was already applied.",
+      "evidence": {
+        "helpful": 1,
+        "harmful": 1
+      },
+      "confidence": 0.85,
+      "harness_diff_template": "",
+      "strategy_type": "SCAFFOLD_MODIFICATION",
+      "anti_overspecification_note": ""
+    },
+    {
+      "strategy_id": "ace_009",
+      "condition": "Multi-line code replacement needed, Structural corruption (unreachable code, misplaced statements), Risk of corrupting adjacent code, Precise line number operations required",
+      "strategy": "For issues requiring precise multi-line code replacement or structural fixes: use surgical line-range edits with sed rather than complex regex replacements. Verify exact line numbers before deletion to avoid removing critical code. After structural changes, immediately verify with minimal tests before proceeding to edge cases.",
+      "evidence": {
+        "helpful": 2,
+        "harmful": 0
+      },
+      "confidence": 0.92,
+      "harness_diff_template": "",
+      "strategy_type": "SCAFFOLD_MODIFICATION",
+      "anti_overspecification_note": ""
+    },
+    {
+      "strategy_id": "ace_010",
+      "condition": "Issue includes specific reproduction script, Expected output clearly defined, Reproduction case is self-contained",
+      "strategy": "For issues with specific reproduction scripts provided: save and run the EXACT reproduction script first to confirm the bug. After implementing fixes, run the EXACT same reproduction script again to verify the fix matches expected behavior. Only then proceed to additional validation. The reproduction script is the contract.",
+      "evidence": {
+        "helpful": 1,
+        "harmful": 1
+      },
+      "confidence": 0.92,
+      "harness_diff_template": "",
+      "strategy_type": "SCAFFOLD_MODIFICATION",
+      "anti_overspecification_note": ""
+    },
+    {
+      "strategy_id": "ace_011",
+      "condition": "Variables referenced before assignment, Incorrect control flow or statement ordering, Error messages suggest missing code but real issue is logic, Methods exist but have wrong implementation",
+      "strategy": "For issues with logic errors in existing code (not just missing methods): force reading source files before editing. Error messages alone are insufficient when the bug is incorrect implementation rather than missing code. Prevent blind method rewrites - require understanding existing logic flow first.",
+      "evidence": {
+        "helpful": 1,
+        "harmful": 0
+      },
+      "confidence": 0.95,
+      "harness_diff_template": "",
+      "strategy_type": "TEXT_INJECTION",
+      "anti_overspecification_note": ""
+    },
+    {
+      "strategy_id": "ace_012",
+      "condition": "Signature validation for base class or interface, Extensible plugin/subclass system, Undefined variable in validation code",
+      "strategy": "For signature validation bugs in extensible interfaces: extract signatures dynamically from the base class using inspect.signature() rather than hardcoding. Run minimal reproduction case early to confirm the fix. Avoid deep-diving into unrelated test failures after the main fix.",
+      "evidence": {
+        "helpful": 1,
+        "harmful": 0
+      },
+      "confidence": 0.85,
+      "harness_diff_template": "",
+      "strategy_type": "TEXT_INJECTION",
+      "anti_overspecification_note": ""
+    }
+  ],
+  "general_notes": [
+    "Soft nudges outperform hard gates (reflection prompts +2pp, submission gates -8pp).",
+    "Do not modify has_finished() \u2014 over-specification drops pass rate.",
+    "Strategies are grounded in contrastive trajectory analysis: same issue, different harness, different agent behavior."
+  ],
+  "anti_patterns": [
+    "Forcing exploration of 4+ files when bug location is explicitly stated in issue description - wastes steps on irrelevant code reading",
+    "Running comprehensive test suites after successful reproduction case verification - causes timeout without adding value for simple fixes",
+    "Creating extensive test infrastructure for syntax errors or simple bugs - reproduction script provides faster feedback",
+    "Modifying installed packages without verifying import paths - changes may not be executed if wrong version is imported",
+    "Attempting to fix issues with non-reproducible bugs or non-existent APIs - verify the issue can be reproduced before spending steps on investigation",
+    "Over-verification spirals: running multiple redundant test variations after fix is proven to work",
+    "Analysis paralysis: continuing exploration after having all information needed to implement fix",
+    "Prioritizing documentation/summaries over submission when approaching step limits",
+    "AVOID: For issues involving installed Python packages: first verify the import path to locate the actual installed package. Either modify the installed package directly OR ensure local working directory is in PYTHONPATH before site-packages. After changes, verify the fix is actually being used by re-importing. Consider using 'pip install -e .' for editable installs. (harmful=1, helpful=0)",
+    "AVOID: For performance optimization issues where validation is blocked by environmental problems: create standalone performance benchmarks that don't depend on full test suite. Use time measurements and profiling as primary success indicators. Document the fix with before/after metrics even if tests can't run. Consider issue resolved when code change is correct and measurable improvement is demonstrated. (harmful=1, helpful=0)",
+    "AVOID: For issues requiring deep multi-module investigation: use targeted search patterns early (grep for specific assignments/calls). Create minimal reproduction test within first 5 steps. Set investigation budget (max 15-20 steps) before forcing implementation attempt. Use binary search approach - test hypothetical fixes earlier rather than achieving complete understanding first. (harmful=1, helpful=0)",
+    "AVOID: When agent completes all technical work correctly (fix implemented, tests pass): add explicit submission reminders before token budget exhaustion. Agent should prioritize submission over optional documentation/summaries when approaching limits. Check: 'Is core fix complete and tested? If yes, submit immediately before doing anything else.' (harmful=3, helpful=0)"
+  ],
+  "metadata": {
+    "source": "ace_output/multi_repo_sonnet45/reflections.jsonl",
+    "total_reflections": 50,
+    "valid_reflections": 49,
+    "clusters": 15,
+    "min_evidence": 1,
+    "curator_model": "vertex_ai/claude-sonnet-4-5@20250929"
+  }
+}

@@ -1,0 +1,38 @@
+Turbo Harness
+Copyright (c) 2026 Tunyu Zhang and the Turbo Harness authors
+
+This repository is released under the MIT License (see LICENSE). It includes and
+depends on third-party software whose own licenses apply to the corresponding
+components. Summary below; see each upstream project for authoritative terms.
+
+--------------------------------------------------------------------------------
+Vendored (source included in this repository)
+--------------------------------------------------------------------------------
+- SkyRL — RL training framework (FSDP + vLLM + Ray + GRPO).
+  License: Apache License 2.0 (retained at SkyRL/LICENSE).
+  Upstream: https://github.com/NovaSky-AI/SkyRL
+  Included under: SkyRL/  (vendored source; the upstream `docs/` were omitted; may include
+  local modifications made for this project). Refer to the upstream project for the canonical version.
+
+- mini-swe-agent (MIT) — coding-benchmark agent scaffold (used unmodified, subclassed).
+  Included under: turbo_harness/infra/mini-swe-agent/  (its LICENSE.md is retained there).
+
+--------------------------------------------------------------------------------
+Runtime dependencies (installed via pip; NOT vendored here)
+--------------------------------------------------------------------------------
+- harbor / terminal-bench — Terminal-Bench-2.1 runtime (optional `tb2` extra); see their upstream
+  repositories for license terms.
+- vLLM (Apache-2.0) — serving the trained harness editor at evaluation time.
+
+--------------------------------------------------------------------------------
+Referenced for context (NOT included in this repository)
+--------------------------------------------------------------------------------
+- Advisor Models (Asawa et al.)
+- Meta-Harness
+- ACE (Agentic Context Engineering)
+- GEPA
+
+--------------------------------------------------------------------------------
+Benchmarks (subject to their own upstream terms)
+--------------------------------------------------------------------------------
+- SWE-smith, SWE-bench Verified, ALFWorld, Terminal-Bench-2.1.

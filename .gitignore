@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.pyc
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+.ruff_cache/
+
+# Env / OS / secrets
+.env
+.DS_Store
+
+# Runtime artifacts (regenerable or large)
+wandb/
+logs/
+outputs/
+skyrl-eval-logs/
+vllm_server.log
+# RL training datasets are regenerable (build_rl_dataset); data splits ship as JSON:
+*.parquet
+
+# Model weights / checkpoints (training outputs)
+checkpoints/
+exports/
+
+# Vendored SkyRL: its SOURCE is tracked, but its venv / caches / build outputs are not
+SkyRL/.venv/
+SkyRL/**/__pycache__/
+SkyRL/**/*.egg-info/
+SkyRL/wandb/
+
+# NOTE: we intentionally DO commit the small stage-A/B inputs under
+# artifacts/ (global harnesses H*, playbook.json) and the splits under data/.
+# Do not add blanket ignores for those directories.
+
+# ALFWorld game data (downloaded by the user; see docs/DEPENDENCIES.md)
+data/alfworld_data/
+
+# TB2 harbor job dirs (trajectories, large)
+turbo_harness/terminal_bench/jobs/

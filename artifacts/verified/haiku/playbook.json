@@ -1,0 +1,279 @@
+{
+  "entries": [
+    {
+      "strategy_id": "ace_000",
+      "condition": "Issue description provides exact file path and line number, Fix is a simple code change (1-5 lines), No complex logic or edge cases, Existing test suite provides adequate coverage, Solution is explicitly stated or strongly hinted in issue description",
+      "strategy": "For simple, well-specified fixes (single-line changes, explicit locations in issue description, straightforward logic): Guide agents to submit immediately after making code changes. Discourage verification, test creation, or comprehensive test suite runs. Use explicit warnings about step budget constraints.",
+      "evidence": {
+        "helpful": 47,
+        "harmful": 2
+      },
+      "confidence": 0.94,
+      "harness_diff_template": "",
+      "strategy_type": "SCAFFOLD_MODIFICATION",
+      "anti_overspecification_note": ""
+    },
+    {
+      "strategy_id": "ace_001",
+      "condition": "Fix requires modifying 2+ files, Changes must be coordinated (e.g., implementation + tests, or multiple related methods), Each change is relatively simple but must work together",
+      "strategy": "For multi-file or multi-location fixes requiring coordinated changes: Make ALL changes before validation. Test only the core issue scenario from the bug report, not exhaustive edge cases. Submit immediately after confirming the reported issue is fixed.",
+      "evidence": {
+        "helpful": 18,
+        "harmful": 3
+      },
+      "confidence": 0.89,
+      "harness_diff_template": "",
+      "strategy_type": "TEXT_INJECTION",
+      "anti_overspecification_note": ""
+    },
+    {
+      "strategy_id": "ace_002",
+      "condition": "Using sed, awk, or programmatic file editing, Python code with indentation sensitivity, Multi-line changes or code wrapping, Risk of silent edit failures",
+      "strategy": "After making code edits, immediately re-read the exact edited lines (5-10 lines context) to verify the change was applied correctly. This catches sed/script failures, syntax errors, and incomplete edits without requiring expensive test runs.",
+      "evidence": {
+        "helpful": 15,
+        "harmful": 1
+      },
+      "confidence": 0.93,
+      "harness_diff_template": "",
+      "strategy_type": "SCAFFOLD_MODIFICATION",
+      "anti_overspecification_note": ""
+    },
+    {
+      "strategy_id": "ace_003",
+      "condition": "Multi-component bugs, Complex architectural interactions, Non-obvious root causes, Risk of analysis paralysis",
+      "strategy": "For issues requiring understanding of complex interactions or architectural patterns: Enforce early hypothesis formation (within first 5-10 steps) stating ROOT CAUSE, LIKELY LOCATION, and VALIDATION PLAN before reading files. This prevents aimless exploration and focuses investigation.",
+      "evidence": {
+        "helpful": 14,
+        "harmful": 2
+      },
+      "confidence": 0.88,
+      "harness_diff_template": "",
+      "strategy_type": "SCAFFOLD_MODIFICATION",
+      "anti_overspecification_note": ""
+    },
+    {
+      "strategy_id": "ace_004",
+      "condition": "Comprehensive existing test suite, Test file location is known or easily discoverable, Fix is in well-tested code, Test execution is time-consuming",
+      "strategy": "For issues where existing test suites validate the fix: After implementing the fix, run ONLY the most directly relevant test file. If it passes, submit immediately. Discourage running multiple test suites, creating new tests, or broad test exploration.",
+      "evidence": {
+        "helpful": 22,
+        "harmful": 1
+      },
+      "confidence": 0.95,
+      "harness_diff_template": "",
+      "strategy_type": "TEXT_INJECTION",
+      "anti_overspecification_note": ""
+    },
+    {
+      "strategy_id": "ace_005",
+      "condition": "Fix changes behavior that tests validate, Tests may encode old/buggy behavior, Test updates are mechanical (assertion changes), Risk of step exhaustion on test modifications",
+      "strategy": "For issues involving test file modifications or test expectation updates: Forbid test file edits during implementation. Focus purely on source code fixes. Test failures after correct fixes are expected when tests encoded buggy behavior.",
+      "evidence": {
+        "helpful": 12,
+        "harmful": 0
+      },
+      "confidence": 0.96,
+      "harness_diff_template": "",
+      "strategy_type": "TEXT_INJECTION",
+      "anti_overspecification_note": ""
+    },
+    {
+      "strategy_id": "ace_006",
+      "condition": "Agent demonstrates correct solution, Tests pass or fix is verified, Agent continues working instead of submitting, Behavioral/meta-cognitive failure rather than technical",
+      "strategy": "When agents complete technical work correctly but fail to submit: Add explicit completion criteria recognition. After (1) fix implemented, (2) basic tests pass, (3) core functionality verified, the agent should immediately submit rather than continuing verification or exploration.",
+      "evidence": {
+        "helpful": 18,
+        "harmful": 0
+      },
+      "confidence": 0.97,
+      "harness_diff_template": "",
+      "strategy_type": "TEXT_INJECTION",
+      "anti_overspecification_note": ""
+    },
+    {
+      "strategy_id": "ace_007",
+      "condition": "Fix involves conditional logic with edge cases, Initial obvious solution may be incomplete, Quick validation can catch common errors, Full test suite is expensive",
+      "strategy": "For issues requiring iterative refinement or handling edge cases: Allow 1-2 quick validation tests after initial implementation to catch obvious bugs (like logic errors or missing cases), then enforce submission. Prevent comprehensive test suites that exhaust the budget.",
+      "evidence": {
+        "helpful": 11,
+        "harmful": 2
+      },
+      "confidence": 0.86,
+      "harness_diff_template": "",
+      "strategy_type": "SCAFFOLD_MODIFICATION",
+      "anti_overspecification_note": ""
+    },
+    {
+      "strategy_id": "ace_008",
+      "condition": "Issue references old version or commit, Testbed may contain newer code, Bug report is from older version, Fix might have been applied already",
+      "strategy": "For issues where the fix may already exist in the codebase: Check if the reported bug still exists in current code BEFORE editing. If fix is present, verify behavior matches expected outcome and submit. Avoid adding tests as substitute for the actual fix.",
+      "evidence": {
+        "helpful": 5,
+        "harmful": 0
+      },
+      "confidence": 0.91,
+      "harness_diff_template": "",
+      "strategy_type": "SCAFFOLD_MODIFICATION",
+      "anti_overspecification_note": ""
+    },
+    {
+      "strategy_id": "ace_009",
+      "condition": "Requires specific hardware or OS, Needs external services or credentials, Python version-specific behavior, Dependencies unavailable in test environment",
+      "strategy": "For issues requiring external dependencies, specific environments, or platform-specific behavior: Accept that full reproduction may be impossible. Focus on code analysis and logic verification. Document environment limitations clearly. Consider the fix complete if logically correct even without runtime validation.",
+      "evidence": {
+        "helpful": 6,
+        "harmful": 0
+      },
+      "confidence": 0.93,
+      "harness_diff_template": "",
+      "strategy_type": "TEXT_INJECTION",
+      "anti_overspecification_note": ""
+    },
+    {
+      "strategy_id": "ace_011",
+      "condition": "Feature request rather than bug fix, Adding new methods/functionality, No pre-existing failing test, Implementation follows clear patterns",
+      "strategy": "For feature implementations or new method additions: Implement the core functionality first. Run one basic smoke test. Submit immediately without comprehensive test coverage or edge case exploration.",
+      "evidence": {
+        "helpful": 9,
+        "harmful": 1
+      },
+      "confidence": 0.91,
+      "harness_diff_template": "",
+      "strategy_type": "TEXT_INJECTION",
+      "anti_overspecification_note": ""
+    },
+    {
+      "strategy_id": "ace_012",
+      "condition": "Test output is extremely verbose, Test infrastructure requires complex setup, Fix correctness is verifiable by inspection, Testing provides minimal additional confidence",
+      "strategy": "For issues with verbose test output or complex test infrastructure: Skip test execution entirely. Verify edits were applied correctly through code inspection, then submit. Trust external validation systems.",
+      "evidence": {
+        "helpful": 8,
+        "harmful": 0
+      },
+      "confidence": 0.94,
+      "harness_diff_template": "",
+      "strategy_type": "SCAFFOLD_MODIFICATION",
+      "anti_overspecification_note": ""
+    },
+    {
+      "strategy_id": "ace_013",
+      "condition": "Non-obvious API behavior, Need to understand object attributes or structure, Documentation is insufficient, Runtime exploration clarifies implementation",
+      "strategy": "For issues requiring understanding of specific API semantics or library internals: Allow exploratory testing of actual runtime values/behavior before editing. Use Python REPL or small scripts to discover object attributes, method behavior, or data structures.",
+      "evidence": {
+        "helpful": 6,
+        "harmful": 1
+      },
+      "confidence": 0.88,
+      "harness_diff_template": "",
+      "strategy_type": "TEXT_INJECTION",
+      "anti_overspecification_note": ""
+    },
+    {
+      "strategy_id": "ace_014",
+      "condition": "Fix is clearly correct, Test file location is unclear, Test discovery is time-consuming, Manual verification demonstrates correctness",
+      "strategy": "For issues where the fix is straightforward but test discovery is unclear: After implementing and manually verifying the fix, limit test discovery attempts to 3-5 steps. If automated tests can't be quickly located, consider the fix complete after manual verification.",
+      "evidence": {
+        "helpful": 5,
+        "harmful": 0
+      },
+      "confidence": 0.92,
+      "harness_diff_template": "",
+      "strategy_type": "SCAFFOLD_MODIFICATION",
+      "anti_overspecification_note": ""
+    },
+    {
+      "strategy_id": "ace_015",
+      "condition": "Multi-line code changes, Indentation-sensitive modifications, Complex control flow changes, Risk of sed syntax errors",
+      "strategy": "Use Python-based file editing (ast, redbaron, or Python scripts) instead of sed for multi-line changes, especially when indentation matters or changes involve complex control flow. Sed is fragile for structural modifications.",
+      "evidence": {
+        "helpful": 7,
+        "harmful": 1
+      },
+      "confidence": 0.89,
+      "harness_diff_template": "",
+      "strategy_type": "SCAFFOLD_MODIFICATION",
+      "anti_overspecification_note": ""
+    },
+    {
+      "strategy_id": "ace_016",
+      "condition": "Interactive CLI with prompt loops, User input simulation required, Risk of hanging or infinite loops, Validation logic can be tested in isolation",
+      "strategy": "For issues involving interactive CLI tools or prompt loops: Test ONLY the modified validation/logic functions in isolation using unit tests. Never run the interactive tool itself during testing, as it can cause infinite loops or timeouts.",
+      "evidence": {
+        "helpful": 2,
+        "harmful": 0
+      },
+      "confidence": 0.95,
+      "harness_diff_template": "",
+      "strategy_type": "SCAFFOLD_MODIFICATION",
+      "anti_overspecification_note": ""
+    },
+    {
+      "strategy_id": "ace_017",
+      "condition": "Issue provides explicit reproduction steps, Reproduction case is simple and deterministic, Agent created variations but not literal reproduction, Final validation should match exact bug report",
+      "strategy": "For issues requiring exact reproduction of the bug report scenario: Run the EXACT reproduction commands from the issue description as final validation before submission. Don't rely solely on variations or synthetic test cases.",
+      "evidence": {
+        "helpful": 4,
+        "harmful": 0
+      },
+      "confidence": 0.91,
+      "harness_diff_template": "",
+      "strategy_type": "TEXT_INJECTION",
+      "anti_overspecification_note": ""
+    },
+    {
+      "strategy_id": "ace_018",
+      "condition": "Mathematical correctness bug, Algorithmic logic error, Multiple plausible solutions, Need to verify semantic correctness",
+      "strategy": "For mathematical or algorithmic correctness issues: Create minimal reproduction test FIRST to validate understanding. Form explicit hypotheses about root cause. Test hypotheses with targeted code changes rather than continued exploration.",
+      "evidence": {
+        "helpful": 6,
+        "harmful": 2
+      },
+      "confidence": 0.82,
+      "harness_diff_template": "",
+      "strategy_type": "TEXT_INJECTION",
+      "anti_overspecification_note": ""
+    },
+    {
+      "strategy_id": "ace_019",
+      "condition": "External CLI tool integration, Mock-based test framework, Risk of false positives from mocks, Tool-specific syntax requirements",
+      "strategy": "For issues where mock-based tests can pass with incorrect implementation: Verify implementation against actual tool documentation or man pages. Ensure tests validate tool compatibility, not just argument structure.",
+      "evidence": {
+        "helpful": 2,
+        "harmful": 0
+      },
+      "confidence": 0.92,
+      "harness_diff_template": "",
+      "strategy_type": "SCAFFOLD_MODIFICATION",
+      "anti_overspecification_note": ""
+    }
+  ],
+  "general_notes": [
+    "Soft nudges outperform hard gates (reflection prompts +2pp, submission gates -8pp).",
+    "Do not modify has_finished() \u2014 over-specification drops pass rate.",
+    "Strategies are grounded in contrastive trajectory analysis: same issue, different harness, different agent behavior."
+  ],
+  "anti_patterns": [
+    "Creating comprehensive test suites for simple fixes where existing tests provide coverage",
+    "Running full test suites when targeted tests already validate the fix",
+    "Continuing verification after successful test passage instead of submitting",
+    "Attempting to fix test infrastructure issues unrelated to the actual bug",
+    "Over-engineering solutions with complex logic when simple fixes suffice",
+    "Spending steps on documentation or auxiliary improvements after core fix is complete",
+    "Using sed for complex multi-line changes instead of Python-based editing",
+    "Testing interactive CLI tools end-to-end instead of unit testing validation logic",
+    "Creating new tests when the issue explicitly states existing tests already pass",
+    "Attempting comprehensive edge case testing for trivial mechanical changes",
+    "Debugging test setup issues when the fix itself is already correct",
+    "Exploring git history or version comparisons after implementing a working solution",
+    "AVOID: For issues involving complex multi-component bugs requiring deep understanding: Set hard limits on exploration (10-15 steps max). Force early implementation attempts even with incomplete understanding. Use test-driven iteration rather than exhaustive analysis. (harmful=12, helpful=8)"
+  ],
+  "metadata": {
+    "source": "ace_output/verified_haiku/reflections.jsonl",
+    "total_reflections": 251,
+    "valid_reflections": 246,
+    "clusters": 20,
+    "min_evidence": 1,
+    "curator_model": "vertex_ai/claude-sonnet-4-5@20250929"
+  }
+}

@@ -1,0 +1,115 @@
+{
+  "entries": [
+    {
+      "strategy_id": "alf_ace_000",
+      "condition": "task-type=pick_two, requires placing TWO instances of same object type, no processing steps (clean/heat/cool)",
+      "strategy": "For pick_two tasks: disable generic single-object subgoal tracking (find\u2192process\u2192place). Implement pick_two-specific logic that tracks 'find_first \u2192 place_first \u2192 find_second \u2192 place_second' with explicit counting of placed instances. Prioritize visiting the TARGET receptacle FIRST to check for pre-placed objects before searching elsewhere.",
+      "evidence": {
+        "helpful": 3,
+        "harmful": 0
+      },
+      "confidence": 0.94,
+      "harness_diff_template": "",
+      "strategy_type": "SCAFFOLD_MODIFICATION",
+      "anti_overspecification_note": ""
+    },
+    {
+      "strategy_id": "alf_ace_001",
+      "condition": "task-type=cool_then_place OR heat_then_place OR clean_then_place, requires mandatory processing step between pickup and placement",
+      "strategy": "For cool/heat/clean tasks: parse processing requirement from task string at initialization; track processing completion via observation pattern matching ('You cool/heat/clean the X'); inject explicit blocking reminder immediately after agent picks target object and BEFORE any navigation to destination if processing flag is still False.",
+      "evidence": {
+        "helpful": 4,
+        "harmful": 0
+      },
+      "confidence": 0.94,
+      "harness_diff_template": "",
+      "strategy_type": "SCAFFOLD_MODIFICATION",
+      "anti_overspecification_note": ""
+    },
+    {
+      "strategy_id": "alf_ace_002",
+      "condition": "task-type=cool_then_place OR heat_then_place OR clean_then_place, agent lacks domain knowledge about object locations or task procedures",
+      "strategy": "For cool/heat/clean tasks: prepend few-shot examples demonstrating the FULL procedural sequence (find object \u2192 pick \u2192 process with correct appliance \u2192 place at destination). Include domain knowledge about object locations (pans on stoveburners, food in fridges, etc.) to prevent exhaustive random search.",
+      "evidence": {
+        "helpful": 5,
+        "harmful": 0
+      },
+      "confidence": 0.94,
+      "harness_diff_template": "",
+      "strategy_type": "SCAFFOLD_MODIFICATION",
+      "anti_overspecification_note": ""
+    },
+    {
+      "strategy_id": "alf_ace_003",
+      "condition": "task-type=heat_then_place, requires maintaining object in inventory during heating",
+      "strategy": "For heat_then_place tasks: provide or canonicalize to a 'heat X with Y' action that heats the held object WITHOUT placing it inside the heating appliance, maintaining continuous possession through the heat step to final placement.",
+      "evidence": {
+        "helpful": 1,
+        "harmful": 0
+      },
+      "confidence": 0.95,
+      "harness_diff_template": "",
+      "strategy_type": "SCAFFOLD_MODIFICATION",
+      "anti_overspecification_note": ""
+    },
+    {
+      "strategy_id": "alf_ace_004",
+      "condition": "agent stuck in repetitive navigation or open/close cycles, especially post-placement loops where agent believes task is done",
+      "strategy": "For all task types: implement tight-loop detection (5+ consecutive identical observations) with actionable nudges to break repetitive action cycles. DO NOT trigger loop-breaking when agent is at a receptacle with target object visible and needs to select/pick it\u2014only trigger AFTER pickup or when stuck in open/close cycles at empty receptacles.",
+      "evidence": {
+        "helpful": 2,
+        "harmful": 1
+      },
+      "confidence": 0.94,
+      "harness_diff_template": "",
+      "strategy_type": "SCAFFOLD_MODIFICATION",
+      "anti_overspecification_note": ""
+    },
+    {
+      "strategy_id": "alf_ace_005",
+      "condition": "task-type=pick_and_place, no processing steps (clean/heat/cool), simple object-finding requirement",
+      "strategy": "For pick_and_place tasks WITHOUT processing requirements: avoid injecting task-requirement validators, subgoal reminders as user messages between assistant turns, or loop-breaking logic that can trigger false positives. Use minimal scaffold (canonicalize action + retry on tool-call failure only) to preserve action continuity for straightforward find\u2192take\u2192place procedures.",
+      "evidence": {
+        "helpful": 2,
+        "harmful": 0
+      },
+      "confidence": 0.89,
+      "harness_diff_template": "",
+      "strategy_type": "SCAFFOLD_MODIFICATION",
+      "anti_overspecification_note": ""
+    },
+    {
+      "strategy_id": "alf_ace_006",
+      "condition": "task-type=pick_and_place, multiple similar object types exist (soapbar/soapbottle, cup/mug, etc.), risk of object substitution",
+      "strategy": "For pick_and_place tasks: implement object-type validation before declaring success. After placing an object, verify it matches the exact task requirement (e.g., soapbottle vs soapbar). If wrong object was placed, inject corrective reminder to continue searching. Prevent premature stop declarations by checking object-type match, not just placement completion.",
+      "evidence": {
+        "helpful": 2,
+        "harmful": 0
+      },
+      "confidence": 0.94,
+      "harness_diff_template": "",
+      "strategy_type": "SCAFFOLD_MODIFICATION",
+      "anti_overspecification_note": ""
+    }
+  ],
+  "general_notes": [
+    "Strategies are grounded in contrastive per-game analysis: same ALFWorld task, one harness WON, another LOST.",
+    "Adapt the agent loop's per-task-type SUBGOAL DECOMPOSITION, receptacle-search order/memory, action repair/recovery, and stop logic \u2014 not prompt wording, not the model."
+  ],
+  "anti_patterns": [
+    "Injecting subgoal reminders as user messages between assistant turns for simple pick_and_place tasks\u2014disrupts action continuity and causes navigation loops",
+    "Using single-object find\u2192process\u2192place subgoal tracking for pick_two tasks\u2014causes agent to lose count and manipulate already-placed objects",
+    "Triggering loop-breaking nudges when agent sees repeated observations of a receptacle containing the target object\u2014the 'same observation' is necessary context for object selection",
+    "Injecting task-requirement validators for simple pick_and_place tasks without processing steps\u2014adds failure modes via false-positive loop detection"
+  ],
+  "metadata": {
+    "domain": "alfworld",
+    "method": "ace-trajectory-grounded",
+    "source_run": "experiments/logs/alfworld_meta_harness/alf_stage1_sonnet",
+    "n_experiences": 16,
+    "n_reflections_valid": 16,
+    "curator_model": "vertex_ai/claude-sonnet-4-5@20250929",
+    "min_gap": 0.5,
+    "max_per_task": 3
+  }
+}
